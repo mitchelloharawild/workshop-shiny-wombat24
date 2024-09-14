@@ -18,7 +18,7 @@
     "href": "index.html#required-equipment",
     "title": "Interactive web applications with Shiny for R",
     "section": "Required equipment",
-    "text": "Required equipment\nJust a computer capable of running R and an internet connection! 💻\nThis workshop will be run online, so no other equipment is needed."
+    "text": "Required equipment\nJust a laptop capable of running R and an internet connection! 💻\nA modern IDE such as RStudio, Positron, or vscode is highly recommended."
   },
   {
     "objectID": "index.html#required-software",
