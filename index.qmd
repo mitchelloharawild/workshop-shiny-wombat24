@@ -41,9 +41,9 @@ A [shinyapps.io](https://www.shinyapps.io/) account is needed to deploy your app
 
 ## Required equipment
 
-Just a computer capable of running R and an internet connection! :computer:
+Just a laptop capable of running R and an internet connection! :computer:
 
-This workshop will be run online, so no other equipment is needed.
+A modern IDE such as RStudio, Positron, or vscode is highly recommended.
 
 ## Required software
 
