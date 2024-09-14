@@ -1,0 +1,67 @@
+---
+title: "Interactive web applications with Shiny for R"
+subtitle: A half-day tutorial at the WOMBAT 2024 workshop
+title-block-banner: false
+---
+
+![](images/shiny.svg){style="float:right;padding: 0 0 0 10px;" fig-alt="Shiny Hex Logo" width="175"}
+
+# Course Overview
+
+This three-hour workshop provides the basics of creating interactive web applications in R using Shiny. The best way to learn *interactive* web applications is *interactively*, so throughout the workshop you'll have hands on experience with creating, debugging and publishing apps. It consists of three sessions that cover the basics of creating a user interface (UI), writing server code with reactive programming, and publishing your application. Starting from just R basics, learn how to create shiny apps - including creating a UI, reactive programming, input validation, extension packages and app publishing!
+
+This workshop is part of the [WOMBAT 2024](https://wombat2024.numbat.space/) workshop's tutorials, and will run in-person in Melbourne on October 22nd 2024.
+
+## Learning objectives
+
+-   Create a simple user interface including dashboards
+-   Understand reactive programming for Shiny server code
+-   Use defensive programming to protect against malicious users
+-   Publish applications online with docker and/or [shinyapps.io](https://www.shinyapps.io/)
+
+
+# Educators
+
+## Instructor
+
+![](images/mitch.jpeg){style="float:right;padding: 0 0 0 10px;" fig-alt="Headshot of Mitchell O'Hara-Wild" width="200"}
+[**Mitchell O'Hara-Wild**](https://mitchelloharawild.com/) (he/him) is an award-winning teaching associate at Monash University and consultant at Nectric with particular expertise in forecasting, data analysis and statistical computing using R. He regularly uses Shiny in consulting projects to rapidly prototype, develop and deploy interactive web apps for various industry, academic and government clients. Mitchell is a prominent contributor to the R package ecosystem, and is passionate about empowering everyone to explore their world with interactive data analysis tools.
+
+<div align="center">
+<a href="https://www.mitchelloharawild.com"><img border="0" alt="Blog" src="https://assets.dryicons.com/uploads/icon/svg/4926/home.svg" width="35" height="35"></a>&ensp;
+<a href="https://github.com/mitchelloharawild"><img border="0" alt="Github" src="https://assets.dryicons.com/uploads/icon/svg/8312/cc33248a-e56e-4e7f-93f4-0e16350e5768.svg" width="35" height="35"></a>&ensp; 
+<a href="https://www.linkedin.com/in/mitchelloharawild/"><img border="0" alt="LinkedIn" src="https://assets.dryicons.com/uploads/icon/svg/8337/a347cd89-1662-4421-be90-58e5e8004eae.svg" width="35" height="35"></a>&ensp;&emsp;
+</div>
+
+# Preparation
+
+The workshop will cover the basics of creating shiny web applications. There is no need for prior experience in website development or shiny to get the most out of this workshop. This workshop is packed with content, and so familiarity with writing R code is essential. Some familiarity with tidyverse packages including dplyr and ggplot2 would also be beneficial to fully understand the demonstrated apps. If you are unfamiliar with writing R code or using the tidyverse, consider working through the learnr materials here: <https://learnr.numbat.space/>.
+
+A [shinyapps.io](https://www.shinyapps.io/) account is needed to deploy your app to <https://www.shinyapps.io/> in session 3 (but is not required if you just want to watch this part).
+
+## Required equipment
+
+Just a computer capable of running R and an internet connection! :computer:
+
+This workshop will be run online, so no other equipment is needed.
+
+## Required software
+
+To be able to complete the exercises of this workshop, please make sure to install a suitable IDE (such as RStudio), a recent version of R (4.1+) and the following packages. In order to deploy your app using docker, you will need to install docker from <https://docs.docker.com/desktop/>
+
+-   **Shiny packages and extensions**
+    -   shiny, shinythemes, echarts4r
+-   **tidyverse packages and friends**
+    -   ggplot2, readr, tibble, dplyr, tidyr, stringr, forcats
+
+Run this code to install the packages if needed:
+
+```{r}
+#| eval: false
+packages <- c(
+  "shiny", "shinythemes", "echarts4r", "dplyr",
+  "ggplot2", "readr", "tibble", "tidyr", "stringr", "forcats"
+)
+
+install.packages(setdiff(packages, rownames(installed.packages())))  
+```

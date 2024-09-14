@@ -1,0 +1,12 @@
+---
+title: "Break - Shiny Q & A"
+subtitle: "<span class='code'>11:00-11:15</span>"
+date: "2023-12-01"
+image: "images/question.jpg"
+image-alt: "Question"
+tbl-colwidths: [5,20,75]
+---
+
+Time for a brief break!
+
+Feel free to ask any questions you might have about Shiny and reactive programming.
