@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>03 Publishing apps</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Mitchell O’Hara-Wild" />
+    <meta name="date" content="2022-06-12" />
+    <script src="03_publish_files/header-attrs/header-attrs.js"></script>
+    <link href="03_publish_files/countdown/countdown.css" rel="stylesheet" />
+    <script src="03_publish_files/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="theme/slides.css" type="text/css" />
+    <link rel="stylesheet" href="theme/hex.css" type="text/css" />
+    <link rel="stylesheet" href="theme/animate.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+class: inverse
+background-image: url("images/title.jpg")
+background-size: cover
+
+
+
+
+&lt;style type="text/css"&gt;
+/* custom.css */
+.left-code {
+  color: #777;
+  width: 40%;
+  height: 92%;
+  float: left;
+}
+.right-plot {
+  width: 58%;
+  float: right;
+  padding-left: 1%;
+}
+&lt;/style&gt;
+
+&lt;ul class="hextile clr"&gt;
+	&lt;li&gt;
+    &lt;div&gt;
+      &lt;h1&gt;03&lt;/h1&gt;
+      &lt;p style = "padding-top: 30%; font-size: 1.2em"&gt;Publishing apps&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;img src="images/shiny.svg" alt=""/&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;/li&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;div&gt;
+      &lt;p style = "padding-top: 20%; font-size: 1.33em"&gt;
+      Mitchell O'Hara‑Wild (Nectric)
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+.footnote[
+Materials at [workshop.nectric.com.au/shiny-wombat24/](https://workshop.nectric.com.au/shiny-wombat24/)
+]
+
+---
+
+# Recap: A multi-file shiny app
+
+
+``` r
+fs::dir_tree("../apps/bob_ross/01_bob_ross")
+```
+
+```
+## ../apps/bob_ross/01_bob_ross
+## ├── data
+## │   └── elements-by-episode.csv
+## ├── global.R
+## ├── server.R
+## ├── ui.R
+## └── www
+##     └── joy_of_painting.jpg
+```
+
+--
+
+Most shiny apps are organised into several files.
+
+* `ui.R`: The specification of the user interface
+* `server.R`: The R code to define behaviour
+* `global.R`: Objects creation accessible to both `ui.R` and `server.R`
+* `data/`: Folder for your data
+* `www/`: Folder for your web data (images, css, javascript, etc.)
+
+
+---
+
+# Recap: A multi-file shiny app
+
+
+``` r
+fs::dir_tree("../apps/bob_ross/01_bob_ross")
+```
+
+```
+## ../apps/bob_ross/01_bob_ross
+## ├── data
+## │   └── elements-by-episode.csv
+## ├── global.R
+## ├── server.R
+## ├── ui.R
+## └── www
+##     └── joy_of_painting.jpg
+```
+
+Most shiny apps are organised into several files.
+
+* `ui.R`: The specification of the user interface
+* `server.R`: The R code to define behaviour
+* `global.R`: Objects creation accessible to both `ui.R` and `server.R`
+* `data/`: Folder for your data
+* **`www/`: Folder for your web data (images, css, javascript, etc.)**
+
+
+---
+class: center
+
+.box-12.bg-blond[
+# 🚧 This app has room for improvement! 🚧
+]
+
+# How could we make it better?
+
+
+Remove code duplication ✅
+
+
+Add comments to server code ✅
+
+
+Make it more useful ✅
+
+
+Improve layout of outputs ✅
+
+
+**Make it look better**
+
+---
+
+# 🎨 Change colour swatches with `shinythemes`
+
+This package provides colour schemes from http://bootswatch.com/.
+
+--
+
+The fastest and easiest way to change the appearance of your app.
+
+To use it, specify the `theme` argument in your **UI's page function**.
+
+
+``` r
+fluidPage(
+  theme = shinythemes::shinytheme("superhero"),
+  # The rest of your UI code goes here.
+)
+```
+
+You can also provide your own css file to this `theme` argument for a custom style - but remember, it must be in the `www/` folder!
+
+---
+class: feature
+
+# 🌠 Your turn!
+
+.box-12[
+
+## Pick a style for your app 🎨
+
+Use `shinythemes` to change the theme for your gallery.
+
+1. Go to http://bootswatch.com/ and choose a theme you like.
+1. Open `bob_ross/04_bob_ross` and use `shinythemes` to set the app's theme by name.
+
+Hint: Code for setting the theme to "superhero" is shown on the previous page.
+
+&lt;br&gt;
+
+]
+
+<div class="countdown" id="timer_f9d5c6e1" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+---
+
+# 🪟 Transparent plot backgrounds
+
+The plot looks out of place, with some plot styling it can look better.
+
+
+``` r
+output$plot_proportion &lt;- renderPlot({
+  elements_prop() %&gt;% 
+    ggplot(aes(x = proportion, y = element)) + 
+*   geom_col(fill = "white") +
+    scale_x_continuous(labels = scales::percent, limits = c(0,1)) + 
+*   theme(
+*     panel.background = element_rect(fill='transparent'),
+*     plot.background = element_rect(fill='transparent', color=NA),
+*     legend.background = element_rect(fill='transparent'),
+*     legend.box.background = element_rect(fill='transparent'),
+*     text = element_text(colour = "white"),
+*     axis.text = element_text(colour = "white")
+*   )
+*}, bg = "transparent")
+```
+
+Try it out by running the `bob_ross/06_bob_ross` app.
+
+---
+
+# ✨ Alternatively, use a JS plotting library
+
+Replacing ggplot2 with ECharts v5 via the echarts4r package
+
+
+``` r
+# global.R
+*library(echarts4r)
+
+# ui.R
+tabPanel("Plot", 
+         "Frequency of elements in paintings",
+*        echarts4rOutput("plot_proportion", height = "800px")
+)
+
+# server.R
+*output$plot_proportion &lt;- renderEcharts4r({
+  e_charts(data = elements_prop(), x = element) %&gt;%
+    e_bar(serie = proportion, legend = FALSE) %&gt;%
+    e_flip_coords() %&gt;% 
+    e_y_axis(inverse = TRUE)
+})
+```
+
+Try it out by running the `bob_ross/07_bob_ross` app.
+
+---
+background-image: url("images/awesome-shiny-extensions.jpg")
+background-size: cover
+
+&lt;br&gt;
+
+.box-12.bg-blond.bottom-margin.center[
+Curated list of extensions packages by Nan Xiao (肖楠)  
+https://github.com/nanxstats/awesome-shiny-extensions
+]
+
+---
+class: center
+
+.box-12.bg-blond[
+# 🎉 This app is ready to publish! 🎉
+]
+
+Remove code duplication ✅
+
+
+Add comments to server code ✅
+
+
+Make it more useful ✅
+
+
+Improve layout of outputs ✅
+
+
+Make it look better ✅
+
+---
+
+# 🤝 Some publishing options
+
+1. Share the source code fow users to run locally (GitHub)
+2. Host on a server with shinyapps.io (SaaS)
+3. Host on your own server (docker / shinyproxy)
+4. Host on a static website and run shiny in the browser (shinylive)
+
+---
+
+# 🐙 Sharing apps with GitHub (or just a ZIP!)
+
+This is the easiest method for sharing your app, but it could be a bit tricky for end-users to run.
+
+* You simply provide the app's code
+* They need to know how to run R code
+* They need to install the app's package dependencies (`renv` helps)
+* Requires server code and data to be shared in full
+
+This is how I've shared the demo apps with you today!
+
+You can run an app directly from GitHub with one line of code:
+
+
+``` r
+shiny::runGitHub("workshop-shiny-wombat24", "mitchelloharawild", subdir = "apps/bob_ross/07_bob_ross")
+```
+
+---
+
+# 🌥 Hosting with shinyapps.io
+
+Pros:
+1. Very easy to deploy and update (usually just one button)
+2. Support comes included from Posit
+3. Lots of extra features included, like authentication and metrics
+
+Cons:
+1. SaaS is a service (cost, off-site hosting)
+2. Performance tends to be limited, especially for the free tier.
+
+---
+class: feature
+
+# 🌠 Our turn!
+
+&lt;br&gt;
+
+.box-12[
+
+## Deploy an app to shinyapps.io ☁️
+
+Select your favourite app from today and publish it to [shinyapps.io](https://www.shinyapps.io/)
+
+1. When viewing your selected app, click the publish button.
+1. Set up your &lt;shinyapps.io&gt; access token in R.
+1. Select all relevant app files and click 'Publish'
+
+]
+
+
+
+---
+
+# 🐳 Hosting with docker
+
+Pros:
+1. Data and app is kept on-site
+2. Can be better value for performance
+3. Often cheaper, especially if you already run a server
+
+Cons:
+1. Need to manage your own deployment
+2. Can be tricky to install the right dependencies (renv helps)
+3. Not as many helpful tools built-in as shinyapps.io (authentication, management, etc.)
+
+Best approach is to use one docker container per app.
+
+---
+
+# 🐳 Hosting with docker: Dockerfile
+
+1. Create the Dockerfile (update dependencies)
+
+```bash
+FROM rocker/shiny:4.3.1
+
+# Install system dependencies if needed
+# RUN apt-get update &amp;&amp; apt-get install -y [DEPENDENCES...]
+
+# Set the working directory in the container
+WORKDIR /srv/shiny-server
+
+# Copy the app files and renv.lock to the container
+COPY . .
+
+# Install renv
+RUN R -e "install.packages('renv')"
+
+# Restore R packages from renv.lock
+RUN R -e "renv::restore()"
+
+# Change permissions for the Shiny app folder (shiny needs proper permissions)
+RUN chown -R shiny:shiny /srv/shiny-server
+
+# Expose the port for Shiny
+EXPOSE 3838
+
+# Run the Shiny app as a service
+#CMD ["R", "-e", "shiny::runApp('/srv/shiny-server', port = 3838)"]
+CMD ["/usr/bin/shiny-server"]
+```
+
+---
+
+# 🐳 Hosting with docker: Dockerfile
+
+2\. Build the docker image
+
+```bash
+docker build -t "image-name" .
+```
+
+3\. Create and run the docker container
+
+```bash
+docker run --rm -ti -p 3838:3838 image-name
+```
+
+---
+
+# 🐳 Hosting with docker: docker-compose
+
+```yaml
+  shiny:
+    image: rocker/shiny
+    container_name: shiny
+    ports:
+      - "3838:3838"
+    networks:
+      - proxied
+    volumes: 
+      - ${BASE_DIR}/shiny/apps:/srv/shiny-server/
+      - ${BASE_DIR}/shiny/logs:/var/log/shiny-server/
+    restart: unless-stopped
+```
+
+Install the apps you need by starting an R session within the container using `docker exec -it shiny R`.
+
+This shares packages across multiple apps - while it's good for saving space it's terrible for breaking apps!
+
+---
+
+# 🐳 Exposing your docker container to the web
+
+Port forwarding and reverse proxies - I use `jc21/nginx-proxy-manager`.
+
+```yaml
+nginx-manager:
+  image: 'jc21/nginx-proxy-manager:latest'
+  restart: always
+  ports:
+    - '80:80'
+    - '443:443'
+    - '81:81'
+  environment:
+    # These are the settings to access your db
+    DB_MYSQL_HOST: "nginx-db"
+    DB_MYSQL_PORT: 3306
+    DB_MYSQL_USER: "nginx-admin"
+    DB_MYSQL_PASSWORD: "changeme"
+    DB_MYSQL_NAME: "nginx"
+  volumes:
+    - ${BASE_DIR}/nginx/data:/data
+    - ${BASE_DIR}/nginx/letsencrypt:/etc/letsencrypt
+  depends_on:
+    - nginx-db
+```
+
+---
+
+# 🐳 Exposing your docker container to the web
+    
+```yaml
+nginx-db:
+  image: 'jc21/mariadb-aria:latest'
+  restart: always
+  environment:
+    MYSQL_ROOT_PASSWORD: 'changeme'
+    MYSQL_DATABASE: 'nginx'
+    MYSQL_USER: 'nginx-admin'
+    MYSQL_PASSWORD: 'changeme'
+  volumes:
+    - ./data/mysql:/var/lib/mysql
+```
+
+--
+
+Tech infrastructure teams are usually familiar with docker, and might be more receptive to running a docker container rather than maintaining a shiny server for your app.
+
+---
+
+# ✨ Or try shinylive on a static website
+
+Pros:
+1. Can use free static web hosts like Github Pages
+2. Serverless and safer - all code runs in the user's browser
+
+Cons:
+1. Data and app is shared to users (nothing is secret!)
+2. Bleeding edge and things could break
+3. Can take a while to start, as R, shiny, and the packages need downloading
+3. Lacks the helpful tools built-in with shinyapps.io (authentication, management, etc.)
+
+
+More information: https://github.com/posit-dev/shinylive
+
+---
+class: feature
+
+# 🕛 That's all for today!
+
+&lt;br&gt;
+
+.box-12[
+## Where to go next?
+
+Lots more information (especially on non-standard evaluation!) in the Mastering Shiny online book: https://mastering-shiny.org/
+
+Consider integrating R code in existing web apps (non-shiny) using APIs via the plumber package.
+
+Need help making your app? Check out [Shiny Assistant](https://shiny.posit.co/blog/posts/shiny-assistant/).
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="./libs/jquery/jquery.min.js"></script>
+<script src="./libs/slides.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-dark",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
