@@ -353,29 +353,31 @@ Best approach is to use one docker container per app.
 1. Create the Dockerfile (update dependencies)
 
 ```bash
-FROM rocker/shiny:latest
+FROM rocker/shiny:4.3.1
 
-# system libraries
-# Try to only install system libraries you actually need
-RUN apt-get update && apt-get install -y \
-    libcurl4-gnutls-dev \
-    libssl-dev
-  
-# install R packages required (update the packages list)
-RUN R -e 'install.packages(c(\
-              "shiny", \
-              "ggplot2" \
-            ), \
-            repos="https://packagemanager.rstudio.com/cran/__linux__/focal/2023-12-01"\
-          )'
+# Install system dependencies if needed
+# RUN apt-get update && apt-get install -y [DEPENDENCES...]
 
+# Set the working directory in the container
+WORKDIR /srv/shiny-server
 
-# copy the app directory into the image
-COPY ./shiny-app/. /srv/shiny-server/
+# Copy the app files and renv.lock to the container
+COPY . .
 
+# Install renv
+RUN R -e "install.packages('renv')"
+
+# Restore R packages from renv.lock
+RUN R -e "renv::restore()"
+
+# Change permissions for the Shiny app folder (shiny needs proper permissions)
+RUN chown -R shiny:shiny /srv/shiny-server
+
+# Expose the port for Shiny
 EXPOSE 3838
 
-# run app
+# Run the Shiny app as a service
+#CMD ["R", "-e", "shiny::runApp('/srv/shiny-server', port = 3838)"]
 CMD ["/usr/bin/shiny-server"]
 ```
 
@@ -497,4 +499,5 @@ Lots more information (especially on non-standard evaluation!) in the Mastering 
 
 Consider integrating R code in existing web apps (non-shiny) using APIs via the plumber package.
 
+Need help making your app? Check out [Shiny Assistant](https://shiny.posit.co/blog/posts/shiny-assistant/).
 ]

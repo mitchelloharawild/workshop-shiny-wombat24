@@ -12,6 +12,10 @@ This three-hour workshop provides the basics of creating interactive web applica
 
 This workshop is part of the [WOMBAT 2024](https://wombat2024.numbat.space/) workshop's tutorials, and will run in-person in Melbourne on October 22nd 2024.
 
+## Registration
+
+Registration costs AU\$150 (discounted to AU\$75 for students), tickets are available at <https://events.humanitix.com/wombat-2024-day-1>.
+
 ## Learning objectives
 
 -   Create a simple user interface including dashboards
@@ -41,7 +45,7 @@ A [shinyapps.io](https://www.shinyapps.io/) account is needed to deploy your app
 
 ## Required equipment
 
-Just a laptop capable of running R and an internet connection! :computer:
+Just a laptop capable of running R! :computer:
 
 A modern IDE such as RStudio, Positron, or vscode is highly recommended.
 

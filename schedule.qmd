@@ -19,12 +19,6 @@ tbl-colwidths: [5,20,50,25]
 editor: source
 ---
 
-## Sessions
-
-Time: 9AM - 12:30PM AEDT, Friday 1st December 2023
-
-Place: Online, Zoom invitations have been sent to your registration email.
-
 ## Exercises
 
 Throughout the sessions we will be working with prepared shiny apps.
