@@ -59,7 +59,7 @@ background-size: cover
 &lt;/ul&gt;
 
 .footnote[
-Materials at [workshop.nectric.com.au/shiny-ssa23/](https://workshop.nectric.com.au/shiny-ssa23/)
+Materials at [workshop.nectric.com.au/shiny-wombat24/](https://workshop.nectric.com.au/shiny-wombat24/)
 ]
 
 ---
@@ -67,19 +67,19 @@ Materials at [workshop.nectric.com.au/shiny-ssa23/](https://workshop.nectric.com
 # Recap: A multi-file shiny app
 
 
-```r
+``` r
 fs::dir_tree("../apps/bob_ross/01_bob_ross")
 ```
 
 ```
 ## ../apps/bob_ross/01_bob_ross
-## +-- data
-## |   \-- elements-by-episode.csv
-## +-- global.R
-## +-- server.R
-## +-- ui.R
-## \-- www
-##     \-- joy_of_painting.jpg
+## ├── data
+## │   └── elements-by-episode.csv
+## ├── global.R
+## ├── server.R
+## ├── ui.R
+## └── www
+##     └── joy_of_painting.jpg
 ```
 
 --
@@ -98,19 +98,19 @@ Most shiny apps are organised into several files.
 # Recap: A multi-file shiny app
 
 
-```r
+``` r
 fs::dir_tree("../apps/bob_ross/01_bob_ross")
 ```
 
 ```
 ## ../apps/bob_ross/01_bob_ross
-## +-- data
-## |   \-- elements-by-episode.csv
-## +-- global.R
-## +-- server.R
-## +-- ui.R
-## \-- www
-##     \-- joy_of_painting.jpg
+## ├── data
+## │   └── elements-by-episode.csv
+## ├── global.R
+## ├── server.R
+## ├── ui.R
+## └── www
+##     └── joy_of_painting.jpg
 ```
 
 Most shiny apps are organised into several files.
@@ -159,7 +159,7 @@ The fastest and easiest way to change the appearance of your app.
 To use it, specify the `theme` argument in your **UI's page function**.
 
 
-```r
+``` r
 fluidPage(
   theme = shinythemes::shinytheme("superhero"),
   # The rest of your UI code goes here.
@@ -188,7 +188,7 @@ Hint: Code for setting the theme to "superhero" is shown on the previous page.
 
 ]
 
-<div class="countdown" id="timer_57d8f4f1" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown" id="timer_f9d5c6e1" data-update-every="1" tabindex="0" style="right:0;bottom:0;">
 <div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
 <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
@@ -201,7 +201,7 @@ Hint: Code for setting the theme to "superhero" is shown on the previous page.
 The plot looks out of place, with some plot styling it can look better.
 
 
-```r
+``` r
 output$plot_proportion &lt;- renderPlot({
   elements_prop() %&gt;% 
     ggplot(aes(x = proportion, y = element)) + 
@@ -227,7 +227,7 @@ Try it out by running the `bob_ross/06_bob_ross` app.
 Replacing ggplot2 with ECharts v5 via the echarts4r package
 
 
-```r
+``` r
 # global.R
 *library(echarts4r)
 
@@ -305,8 +305,8 @@ This is how I've shared the demo apps with you today!
 You can run an app directly from GitHub with one line of code:
 
 
-```r
-shiny::runGitHub("workshop-shiny-ssa23", "mitchelloharawild", subdir = "apps/bob_ross/07_bob_ross")
+``` r
+shiny::runGitHub("workshop-shiny-wombat24", "mitchelloharawild", subdir = "apps/bob_ross/07_bob_ross")
 ```
 
 ---
@@ -366,29 +366,31 @@ Best approach is to use one docker container per app.
 1. Create the Dockerfile (update dependencies)
 
 ```bash
-FROM rocker/shiny:latest
+FROM rocker/shiny:4.3.1
 
-# system libraries
-# Try to only install system libraries you actually need
-RUN apt-get update &amp;&amp; apt-get install -y \
-    libcurl4-gnutls-dev \
-    libssl-dev
-  
-# install R packages required (update the packages list)
-RUN R -e 'install.packages(c(\
-              "shiny", \
-              "ggplot2" \
-            ), \
-            repos="https://packagemanager.rstudio.com/cran/__linux__/focal/2023-12-01"\
-          )'
+# Install system dependencies if needed
+# RUN apt-get update &amp;&amp; apt-get install -y [DEPENDENCES...]
 
+# Set the working directory in the container
+WORKDIR /srv/shiny-server
 
-# copy the app directory into the image
-COPY ./shiny-app/. /srv/shiny-server/
+# Copy the app files and renv.lock to the container
+COPY . .
 
+# Install renv
+RUN R -e "install.packages('renv')"
+
+# Restore R packages from renv.lock
+RUN R -e "renv::restore()"
+
+# Change permissions for the Shiny app folder (shiny needs proper permissions)
+RUN chown -R shiny:shiny /srv/shiny-server
+
+# Expose the port for Shiny
 EXPOSE 3838
 
-# run app
+# Run the Shiny app as a service
+#CMD ["R", "-e", "shiny::runApp('/srv/shiny-server', port = 3838)"]
 CMD ["/usr/bin/shiny-server"]
 ```
 
@@ -510,6 +512,7 @@ Lots more information (especially on non-standard evaluation!) in the Mastering 
 
 Consider integrating R code in existing web apps (non-shiny) using APIs via the plumber package.
 
+Need help making your app? Check out [Shiny Assistant](https://shiny.posit.co/blog/posts/shiny-assistant/).
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

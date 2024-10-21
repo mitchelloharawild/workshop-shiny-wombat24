@@ -67,21 +67,14 @@
     "href": "schedule.html",
     "title": "Materials",
     "section": "",
-    "text": "Time: 9AM - 12:30PM AEDT, Friday 1st December 2023\nPlace: Online, Zoom invitations have been sent to your registration email."
-  },
-  {
-    "objectID": "schedule.html#sessions",
-    "href": "schedule.html#sessions",
-    "title": "Materials",
-    "section": "",
-    "text": "Time: 9AM - 12:30PM AEDT, Friday 1st December 2023\nPlace: Online, Zoom invitations have been sent to your registration email."
+    "text": "Throughout the sessions we will be working with prepared shiny apps.\nTo follow along and complete the exercises, you should download the apps from the drop-down in the top right, or simply run:\nusethis::use_course(\"https://workshop.nectric.com.au/shiny-wombat24/apps.zip\")"
   },
   {
     "objectID": "schedule.html#exercises",
     "href": "schedule.html#exercises",
     "title": "Materials",
-    "section": "Exercises",
-    "text": "Exercises\nThroughout the sessions we will be working with prepared shiny apps.\nTo follow along and complete the exercises, you should download the apps from the drop-down in the top right, or simply run:\nusethis::use_course(\"https://workshop.nectric.com.au/shiny-wombat24/apps.zip\")"
+    "section": "",
+    "text": "Throughout the sessions we will be working with prepared shiny apps.\nTo follow along and complete the exercises, you should download the apps from the drop-down in the top right, or simply run:\nusethis::use_course(\"https://workshop.nectric.com.au/shiny-wombat24/apps.zip\")"
   },
   {
     "objectID": "schedule.html#schedule",
